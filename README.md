@@ -37,11 +37,12 @@ WOW "Hello"
 
 DoIt otherThing ~>
   WOW "Hi"
+  meme.log "Hi"
 <~
 
 DoIt thing ~> g,h 
-  hctf meme is "Hola"
-  WOW meme
+  hctf m3me is "Hola"
+  WOW m3me
   WOW g
   JustDoIt otherThing
 <~
@@ -51,5 +52,5 @@ AnothaOne 5 ~>
 <~
 JustDoIt thing ~> 1,2`
 
-lexer(memes);
+lexer(memes); // will return js
 ```
