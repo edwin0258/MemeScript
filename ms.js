@@ -1,8 +1,8 @@
-//M3meScript0.1
+//M3meScript0.12
 function lexer(program){
   let stream = "";
   let tokens = [];
-  let comment = alerting = functions = forinit = forloop = farguments = variables = fparameters = fcall = false;
+  let comment = alerting = functions = ifStatement = elseStatement = elseifStatement = consoleOut = condition = forinit = forloop = farguments = variables = fparameters = fcall = false;
   function removeNewLine(s){
     return s.split('').splice(-s.length,s.length - 1).join('');
   }
@@ -42,6 +42,9 @@ function lexer(program){
       if(forloop === true){
         tokens.push("ENDFOR");
         forloop = false;
+      } else if(ifStatement === true || elseifStatement === true || elseStatement === true){
+        tokens.push("ENDCONDITIONAL");
+        ifStatement = elseifStatement = elseStatement = false;
       } else if(functions === true){
         tokens.push("ENDFUNCTION");
         functions = false;
@@ -63,6 +66,14 @@ function lexer(program){
         tokens.push("ENDFORINIT");
         stream = "";
         forinit = false;
+      } else if(condition === true){
+        tokens.push(removeWhiteSpace(stream.split('~>').join('')));
+        stream = "";
+        tokens.push("ENDCONDITION");
+        condition = false;
+      } else if(elseStatement === true){
+        stream = "";
+        
       } else {
         // parameters
         tokens.push(removeWhiteSpace(stream.split('~>').join('')));
@@ -80,7 +91,7 @@ function lexer(program){
     }
     
     // Indent //
-    if(functions === true || forloop === true) {
+    if(functions === true || forloop === true || ifStatement === true || elseStatement === true || elseifStatement === true) {
       if(stream == ' ') stream = '';
     }
     
@@ -98,13 +109,39 @@ function lexer(program){
       stream = "";
     }
     
-    // For loop
+    // For loop //
     if(stream == "AnothaOne"){
       tokens.push("FOR");
       stream = "";
       forloop = true;
     }
     
+    // console //
+    if(stream == "meme"){
+      tokens.push("CONSOLE");
+      stream = "";
+      consoleOut = true;
+    }
+    
+    // if statement //
+    if(stream == "WutIf"){
+      tokens.push("IF");
+      stream = "";
+      ifStatement = true;
+      condition = true;
+    }
+    if(stream == "WutElIf"){
+      tokens.push("ELSEIF");
+      stream = "";
+      elseifStatement = true;
+      condition = true;
+    }
+    if(stream == "WutElse"){
+      tokens.push("ELSE");
+      stream = "";
+      elseStatement = true;
+      tokens.push("");
+    }
     
     // New line //
     if(stream.indexOf("\n") != -1){
@@ -142,9 +179,16 @@ function lexer(program){
         tokens.push(stream.replace(/~>|\n/g,''));
         tokens.push('ENDFORINIT');
         stream = "";
-      }
-      
-      else {
+      } else if(consoleOut === true){
+        stream = stream.replace('\n','').split(' ')
+        tokens.push(stream[0]);
+        stream.shift();
+        tokens.push('CONSOLEARG');
+        tokens.push(stream.join(' '));
+        tokens.push('CONSOLEEND');
+        stream = "";
+        consoleOut = false;
+      } else {
         tokens.push('NEWLINE');
       }
       stream = "";
@@ -173,7 +217,15 @@ function parser(tokens){
     'NEWLINE': '\n',
     'VAR': 'var ',
     'EQUALS': '=',
-    'ENDVAR': ';\n'
+    'ENDVAR': ';\n',
+    'CONSOLE': 'console',
+    'CONSOLEARG': '(',
+    'CONSOLEEND': ');\n',
+    'IF': 'if(',
+    'ELSEIF': '} else if(',
+    'ELSE': '} else {',
+    'ENDCONDITION': '){',
+    'ENDCONDITIONAL': '}'
   }
   tokens = tokens.map(x => {
     if(x in tokensToJS){
