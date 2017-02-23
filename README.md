@@ -1,2 +1,55 @@
 # MemeScript
 MS 0.1
+
+###MS example
+```javascript
+M3mes hello world
+M3mes Wut
+
+WOW "Hello"
+
+DoIt otherThing ~>
+  WOW "Hi"
+<~
+
+DoIt thing ~> g,h 
+  hctf meme is "Hola"
+  WOW meme
+  WOW g
+  JustDoIt otherThing
+<~
+
+AnothaOne 5 ~>
+  WOW "lol"
+<~
+JustDoIt thing ~> 1,2
+
+```
+
+###To compile to JS 
+
+```javascript
+var memes = 
+`M3mes hello world
+M3mes Wut
+
+WOW "Hello"
+
+DoIt otherThing ~>
+  WOW "Hi"
+<~
+
+DoIt thing ~> g,h 
+  hctf meme is "Hola"
+  WOW meme
+  WOW g
+  JustDoIt otherThing
+<~
+
+AnothaOne 5 ~>
+  WOW "lol"
+<~
+JustDoIt thing ~> 1,2`
+
+lexer(memes);
+```
