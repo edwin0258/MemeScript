@@ -1,5 +1,5 @@
 # MemeScript
-MS 0.1
+MS 0.12
 
 ###MS example
 ```javascript
@@ -13,8 +13,8 @@ DoIt otherThing ~>
 <~
 
 DoIt thing ~> g,h 
-  hctf meme is "Hola"
-  WOW meme
+  hctf m3me is "Hola"
+  WOW m3me
   WOW g
   JustDoIt otherThing
 <~
