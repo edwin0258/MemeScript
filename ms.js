@@ -1,4 +1,4 @@
-//M3meScript0.12
+//M3meScript0.13
 function lexer(program){
   let stream = "";
   let tokens = [];
@@ -163,7 +163,8 @@ function lexer(program){
         tokens.push(removeWhiteSpace(removeNewLine(stream)).split(','));
         tokens.push('ENDFARG');
         stream = "";
-        fparameters = false;
+        farguments = false;
+        fcall = false;
       } else if(fcall === true){
         tokens.push(removeWhiteSpace(stream.replace('\n','')));
         tokens.push('ENDFCALL');
